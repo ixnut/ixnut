@@ -111,3 +111,44 @@ when a footer exists, no text bottom >1080, no zero-height text.
 - 1:200 / 1:207 Model B slides have no real content.
 - Slide 21 second "SCALE" was relabelled MOMENTUM.
 - "DIGITAL & SOCIAAL" typo fixed to SOCIAL.
+
+═══════════════════════════════════════════
+PART 3 — QUALITY AUDIT (do before variants C/D)
+═══════════════════════════════════════════
+
+## BUG 1 — footer mark invisible on split-layout frames  (CONFIRMED, user-reported)
+Cause: the footer replacement placed "INK x Smart" at a hardcoded x=1400 w=400
+(right edge 1800) on EVERY frame. The six case-study openers (1:352 Polestar,
+1:374 Air Canada, 1:72 Scout, 1:420 Lightship, 1:410 Joby, 1:415 NIO) use a split
+layout — white text panel x 0–880, full-bleed image x 880–1920 — and their footer
+rule only spans 120–740. So the mark landed ON the photograph in dark grey:
+invisible, and pointless where it is.
+
+FIX (general, not per-frame): for every frame, find its "Footer rule" rect and
+right-align the "Footer mark" text to that rule's right edge:
+  markRightEdge = rule.x + rule.width
+  mark.resize(400, h); mark.x = markRightEdge - 400; mark.textAlignHorizontal="RIGHT"
+Never hardcode 1400/1800 again. Same rule for the INK logo on the left:
+logo.x = rule.x.
+
+## Systematic audit to run in the same pass
+1. TEXT-OVER-IMAGE CONTRAST. For every TEXT node, test whether its bbox overlaps
+   any IMAGE-filled rect in the same frame. If it does and there is no scrim,
+   flag it. Either move the text off the image or add a scrim. (Variant B
+   deliberately overlays text on images WITH a scrim — that is fine.)
+2. FOOTER GEOMETRY. logo.x == rule.x, mark right edge == rule right edge,
+   both vertically consistent (logo y=1012 h=32, mark baseline aligned).
+3. LEFT-EDGE ALIGNMENT. Within a frame, collect x of all left-aligned text.
+   Large display type intentionally sits at 116 (optical offset vs 120 body).
+   Flag any OTHER pair differing by 1–8px — that is sloppiness, not optics.
+4. SAFE MARGINS. Nothing between x 1801–1919 or 1–119 unless it bleeds to a
+   true frame edge (0 or 1920).
+5. DEAD FRAMES. Any frame whose only content is a footer + eyebrow — it has lost
+   its body copy. Report, do not silently fill.
+6. ORPHANS. Zero-height text, zero-opacity nodes, nodes fully outside the frame,
+   duplicate stacked nodes at identical coords.
+7. VARIANT B CHECK. B has no footers/eyebrows by design — confirm none leaked in
+   from clones of the image-only frames.
+
+Report every finding with frame name + node before fixing, so the user sees the
+list rather than a silent rewrite.
