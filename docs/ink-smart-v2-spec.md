@@ -1,4 +1,43 @@
-# INK × smart v2 — fixes + 4 design variants (locked)
+# INK × smart — deck design spec (locked)
+
+═══════════════════════════════════════════
+PART 0 — THE REAL DECK  (Eu9mwwX2YjWiYC5YDU9h3P)
+═══════════════════════════════════════════
+File: https://www.figma.com/design/Eu9mwwX2YjWiYC5YDU9h3P/SMART---CLAUDE-V2
+This is now the PRIMARY target. DESIGN file.
+HZToawEyV4hNcB7C7wKq2a was the earlier working file — treat it as reference only.
+
+## NON-DESTRUCTIVE RULE (explicit client instruction: "make sure to not delete stuff")
+The method used on the earlier file cleared each frame and rebuilt it. Do NOT do
+that here. Required sequence:
+
+1. FIRST, before any edit: duplicate the source page and rename the copy
+   `ORIGINAL — do not edit`. Move it to the end of the page list.
+   This is the safety net. Verify it exists and has the same frame count
+   before touching anything.
+2. Build the designed version on the working page.
+3. Never delete a node whose content is not reproduced elsewhere. If a node must
+   go, confirm its text/image already exists on the redesigned frame.
+4. Before deleting anything from a frame, capture its full `characters` and any
+   `imageHash` values and echo them in the script's return value, so the content
+   is recoverable from the tool log even if something goes wrong.
+5. Do not delete any frame. Do not delete any page.
+
+## APPROACH
+Read the whole file first (frame list, sizes, all text, all image hashes) in one
+pass before designing anything — same census method used before.
+Then apply the SAME design language as Variant A ("Studio"), documented below:
+white-led, dark reserved for cover/dividers/closer, Inter Extra Light/Thin display,
+Roboto Mono eyebrows with NO numbers and NO em dashes, hairline rules, footer of
+rule + INK logo left + "INK x Smart" right derived from the footer rule's own width.
+All the rules in PART 3 (bleed, contrast, alignment, margins) apply from the start.
+
+If frames are not 16:9, resize to 1920×1080 and reflow — that was the fix that made
+Present fill the screen last time. Check first; do not assume.
+
+═══════════════════════════════════════════
+REFERENCE — earlier file HZToawEyV4hNcB7C7wKq2a
+═══════════════════════════════════════════
 
 File: HZToawEyV4hNcB7C7wKq2a — **DESIGN file**, 67 frames, all now 1920×1080.
 Page 1 currently holds VARIANT A (built, needs fixes below).
